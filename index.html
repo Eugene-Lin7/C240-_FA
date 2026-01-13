@@ -12,24 +12,24 @@
     <!-- ✅ n8n Chat CSS -->
     <link rel="stylesheet" href="css/styles.css">
 
-<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
 
-<style>
-  :root {
-    /* Blue SwimHub theme */
-    --chat--color-primary: #0066CC;
-    --chat--color-primary-shade-50: #005bb8;
-    --chat--color-primary-shade-100: #004a99;
-    --chat--color-secondary: #00D4FF;
-    --chat--color-secondary-shade-50: #00bfe6;
+    <style>
+        :root {
+            /* Blue SwimHub theme */
+            --chat--color-primary: #0066CC;
+            --chat--color-primary-shade-50: #005bb8;
+            --chat--color-primary-shade-100: #004a99;
+            --chat--color-secondary: #00D4FF;
+            --chat--color-secondary-shade-50: #00bfe6;
 
-    --chat--color--primary: #0066CC;
-    --chat--color--primary-shade-50: #005bb8;
-    --chat--color--primary-shade-100: #004a99;
-    --chat--color--secondary: #00D4FF;
-    --chat--color--secondary-shade-50: #00bfe6;
-  }
-</style>
+            --chat--color--primary: #0066CC;
+            --chat--color--primary-shade-50: #005bb8;
+            --chat--color--primary-shade-100: #004a99;
+            --chat--color--secondary: #00D4FF;
+            --chat--color--secondary-shade-50: #00bfe6;
+        }
+    </style>
 
 
 </head>
@@ -46,7 +46,9 @@
                     <li><a href="#home" class="nav-link">Home</a></li>
                     <li><a href="#basics" class="nav-link">Basics</a></li>
                     <li><a href="#techniques" class="nav-link">Techniques</a></li>
+                    <li><a href="#recommender" class="nav-link">Recommender</a></li>
                     <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="#faq" class="nav-link">FAQ</a></li>
                     <li><a href="#chatbot" class="nav-link">Support</a></li>
                 </ul>
             </div>
@@ -151,6 +153,77 @@
         </div>
     </section>
 
+
+    <!-- ✅ Swim Style Recommender Section -->
+    <section id="recommender" class="recommender">
+        <div class="container">
+            <h2>Find Your Best Swimming Style</h2>
+            <p class="recommender-subtitle">Pick your level, goal, and age — we'll recommend a style to try next.</p>
+
+            <div class="recommender-card">
+                <form id="swimForm" class="recommender-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="level">Your Level</label>
+                            <select id="level" required>
+                                <option value="" selected disabled>Choose one</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="goal">Main Goal</label>
+                            <select id="goal" required>
+                                <option value="" selected disabled>Choose one</option>
+                                <option value="confidence">Build water confidence</option>
+                                <option value="fitness">Stay fit / general health</option>
+                                <option value="cardio">Cardio / endurance</option>
+                                <option value="weight_loss">Weight loss</option>
+                                <option value="speed">Get faster</option>
+                                <option value="technique">Improve technique</option>
+                                <option value="safety">Safety / survival skills</option>
+                                <option value="open_water">Open-water readiness</option>
+                                <option value="low_impact">Low-impact exercise</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="focus">What You Prefer</label>
+                            <select id="focus" required>
+                                <option value="" selected disabled>Choose one</option>
+                                <option value="easy">Easier to learn</option>
+                                <option value="balanced">Balanced challenge</option>
+                                <option value="challenge">I want a challenge</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Your Age Group</label>
+                            <select id="age" required>
+                                <option value="" selected disabled>Choose one</option>
+                                <option value="kid">Under 12</option>
+                                <option value="teen">13–17</option>
+                                <option value="adult">18–35</option>
+                                <option value="mature">36–50</option>
+                                <option value="senior">51+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="cta-button">Get Recommendation</button>
+                        <button type="button" id="resetRec" class="secondary-button">Reset</button>
+                    </div>
+                </form>
+
+                <div id="recResult" class="recommender-result" aria-live="polite"></div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- Image Gallery Section -->
     <section id="gallery" class="gallery">
         <div class="container">
@@ -180,6 +253,87 @@
                     <img src="images/swim-6.jpg" alt="Diving" loading="lazy">
                     <p>Competitive Diving</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ✅ FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <p class="faq-subtitle">Quick answers about swimming basics, safety, and getting started.</p>
+
+            <div class="faq-wrapper">
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        I’m a total beginner — what should I learn first?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Start with water comfort: blowing bubbles, floating (front/back), and basic breathing
+                            control. Once you feel steady, learn a simple kick + balance drill, then progress to
+                            freestyle or backstroke.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        How do I breathe without panicking?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Exhale slowly underwater (bubbles) and inhale quickly when your mouth is above water.
+                            Practice at the pool wall first: inhale → face in → exhale bubbles → lift → inhale.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        Which stroke is easiest to learn?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Many beginners find <strong>backstroke</strong> easier because breathing is simpler. Others
+                            prefer <strong>breaststroke</strong> because it’s slower and gives more control. Your
+                            recommender section helps you pick the best fit.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        What if I’m not confident in deep water?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Focus on safety skills: floating, sculling, and treading water. Practice in shallow water
+                            first and always swim in supervised areas. Confidence grows fastest when you master “rest
+                            positions” like back float.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        How often should I practice to improve?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>2–3 sessions per week is ideal for progress. Even 20–30 minutes is enough if you’re
+                            consistent and repeat the same drills so your technique improves each session.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        How can I improve faster — technique or fitness first?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Technique first. Better body position and breathing makes everything easier. Once your form
+                            is stable, add fitness sets (intervals) to build endurance and speed.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -225,7 +379,8 @@
                     getStarted: 'New Conversation',
                     inputPlaceholder: 'Type your question..',
                 },
-            }})
+            }
+        })
     </script>
 </body>
 

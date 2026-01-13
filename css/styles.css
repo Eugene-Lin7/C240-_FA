@@ -262,8 +262,17 @@ button {
 
 .techniques-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* true 50/50 columns */
     gap: 2.5rem;
+    width: 100%;           /* fill the section */
+    max-width: 100%;      /* remove boxed center look */
+    margin: 0;            /* no centering */
+}
+
+@media (max-width: 768px) {
+    .techniques-container {
+        grid-template-columns: 1fr; /* Stack on mobile */
+    }
 }
 
 .technique-card {
@@ -372,9 +381,39 @@ button {
 /* ===== Chatbot Section ===== */
 .chatbot-section {
     padding: 6rem 2rem;
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-aqua) 100%);
+    position: relative;
+    color: var(--light-white);
+    background: url("../images/Underwater.jpg") center / cover no-repeat;
+    overflow: hidden;
+}
+
+/* Dark blue overlay for readability */
+.chatbot-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 26, 77, 0.85),
+        rgba(0, 102, 204, 0.75)
+    );
+    z-index: 0;
+}
+
+/* Make content appear above overlay */
+.chatbot-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.chatbot-section h2 {
     color: var(--light-white);
 }
+
+.chatbot-section > .container > p {
+    color: rgba(255,255,255,0.9);
+}
+
 
 .chatbot-section h2 {
     color: var(--light-white);
@@ -613,4 +652,324 @@ a:focus {
     h1, h2, h3 {
         page-break-after: avoid;
     }
+}
+
+/* ===============================
+   SwimHub – Recommender (Premium, consistent)
+   Paste at bottom of styles.css
+   =============================== */
+
+.recommender {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, var(--neutral-gray) 0%, var(--light-white) 100%);
+}
+
+.recommender h2 {
+    color: var(--dark-navy);
+}
+
+.recommender-subtitle {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Card matches your basic-card / technique-card vibe */
+.recommender-card {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--light-white);
+    border-radius: 16px;
+    border: 2px solid var(--border-color);
+    padding: 2.5rem;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.recommender-card:hover {
+    border-color: var(--secondary-aqua);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.18);
+    transform: translateY(-3px);
+}
+
+/* Form layout */
+.recommender-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+/* Labels consistent */
+.form-group label {
+    font-weight: 600;
+    color: var(--dark-navy);
+    margin-bottom: 0.55rem;
+    display: block;
+}
+
+/* Premium select but still consistent */
+.form-group select {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    font-size: var(--font-size-p);
+    background: var(--light-white);
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: 0 2px 10px rgba(0, 102, 204, 0.06);
+
+    /* ✅ Keep a visible dropdown arrow (so people know it's a dropdown) */
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--primary-blue) 50%),
+        linear-gradient(135deg, var(--primary-blue) 50%, transparent 50%),
+        linear-gradient(to right, transparent, transparent);
+    background-position:
+        calc(100% - 22px) calc(1.2em),
+        calc(100% - 16px) calc(1.2em),
+        calc(100% - 3.2em) 0.5em;
+    background-size:
+        6px 6px,
+        6px 6px,
+        1px 1.8em;
+    background-repeat: no-repeat;
+    padding-right: 3rem; /* space for arrow */
+}
+
+.form-group select:hover {
+    border-color: var(--secondary-aqua);
+    transform: translateY(-1px);
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+}
+
+/* Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Your CTA already premium; keep consistent sizing */
+.recommender .cta-button {
+    padding: 0.95rem 2.4rem;
+}
+
+/* Secondary button consistent with your palette */
+.secondary-button {
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: 0.95rem 2.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.secondary-button:hover {
+    background: var(--primary-blue);
+    color: var(--light-white);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 102, 204, 0.18);
+}
+
+/* Result box: premium text colors (not dull grey) */
+.recommender-result {
+    margin-top: 2.5rem;
+    padding: 2.2rem;
+    border-radius: 16px;
+    border: 2px solid rgba(0, 212, 255, 0.55);
+    background: rgba(0, 212, 255, 0.08);
+    display: none;
+    animation: slideInLeft 0.6s ease;
+}
+
+.recommender-result.show {
+    display: block;
+}
+
+.recommender-result h3 {
+    color: var(--dark-navy);
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.recommender-result h3 span {
+    color: var(--accent-coral);
+    font-weight: 900;
+}
+
+.recommender-result p {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.recommender-result ul {
+    margin-top: 1rem;
+    padding-left: 1.6rem;
+}
+
+.recommender-result li {
+    padding: 0.45rem 0;
+    color: var(--text-dark);
+    position: relative;
+}
+
+.recommender-result li::before {
+    content: "✓";
+    position: absolute;
+    left: -1.2rem;
+    color: var(--success-green);
+    font-weight: bold;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .recommender-form .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+    }
+
+    .recommender-card {
+        padding: 2rem;
+    }
+
+    .recommender .cta-button,
+    .secondary-button {
+        width: 100%;
+    }
+}
+
+/* ===== FAQ Section ===== */
+.faq {
+    padding: 6rem 2rem;
+    background-color: var(--light-white);
+}
+
+.faq-subtitle {
+    text-align: center;
+    margin-top: -2rem;
+    margin-bottom: 3rem;
+    color: var(--text-light);
+}
+
+.faq-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.2rem;
+}
+
+.faq-item {
+    background: var(--light-white);
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.05);
+    transition: var(--transition);
+}
+
+.faq-item:hover {
+    border-color: var(--secondary-aqua);
+    box-shadow: 0 10px 24px rgba(0, 102, 204, 0.14);
+    transform: translateY(-2px);
+}
+
+.faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 1.4rem;
+    background: transparent;
+    color: var(--dark-navy);
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.faq-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--primary-blue);
+    background: rgba(0, 212, 255, 0.12);
+    border: 1px solid rgba(0, 212, 255, 0.35);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.faq-answer p {
+    padding: 0 1.4rem 1.2rem;
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+.faq-item.active .faq-icon {
+    color: var(--light-white);
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.faq-item.active .faq-question {
+    color: var(--primary-blue);
+}
+
+/* ===============================
+   Fix n8n chat window overflow
+   =============================== */
+
+#n8n-chat {
+  position: relative;
+  z-index: 5;
+}
+
+/* The floating chat window */
+.n8n-chat-window,
+.n8n-chat,
+.n8n-chat-container {
+  max-height: 80vh !important;        /* never exceed 80% of screen */
+  height: auto !important;
+}
+
+/* The inner message area should scroll, not the whole window */
+.n8n-chat-messages {
+  max-height: calc(80vh - 140px) !important;
+  overflow-y: auto !important;
+}
+
+/* Prevent header from being pushed offscreen */
+.n8n-chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Keep input box visible */
+.n8n-chat-input {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: white;
 }

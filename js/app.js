@@ -506,6 +506,372 @@ style.textContent = `
         }
     }
 `;
+
+// ✅ Swim Style Recommender Logic (Age-based + expanded styles)
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("swimForm");
+  const result = document.getElementById("recResult");
+  const resetBtn = document.getElementById("resetRec");
+
+  if (!form || !result) return;
+
+  // Expanded style library
+  const styles = {
+    freestyle: {
+      name: "Freestyle (Front Crawl)",
+      tags: ["fitness", "cardio", "weight_loss", "speed", "open_water"],
+      reasons: [
+        "Most efficient all-around fitness stroke",
+        "Best for endurance and calorie burn",
+        "Easy to progress with drills and pacing"
+      ],
+      drills: ["Catch-up drill", "Side kick + breathing", "Finger drag drill"]
+    },
+    breaststroke: {
+      name: "Breaststroke",
+      tags: ["fitness", "low_impact", "technique", "open_water"],
+      reasons: [
+        "Comfortable breathing rhythm and control",
+        "Great for steady pace and long swims",
+        "Good technique builder (timing + glide)"
+      ],
+      drills: ["2 kicks 1 pull drill", "Glide timing practice", "Frog kick at wall"]
+    },
+    backstroke: {
+      name: "Backstroke",
+      tags: ["confidence", "low_impact", "technique", "fitness"],
+      reasons: [
+        "Face stays above water — easier breathing",
+        "Improves balance, posture, and rotation",
+        "Great low-impact endurance option"
+      ],
+      drills: ["3-6-3 drill", "Single-arm backstroke", "Kick on back (streamline)"]
+    },
+    butterfly: {
+      name: "Butterfly",
+      tags: ["challenge", "cardio", "speed", "technique"],
+      reasons: [
+        "High intensity stroke for power and cardio",
+        "Builds strong core timing and rhythm",
+        "Perfect for short hard sets"
+      ],
+      drills: ["Dolphin kick (on front)", "Single-arm fly", "Body wave drill"]
+    },
+
+    // Survival / confidence / real-world styles
+    elementary_backstroke: {
+      name: "Elementary Backstroke (survival back)",
+      tags: ["confidence", "safety", "low_impact"],
+      reasons: [
+        "Very beginner-friendly survival stroke",
+        "Keeps you afloat with minimal effort",
+        "Excellent confidence builder"
+      ],
+      drills: ["Starfish float", "Gentle scull on back", "Back glide to recovery"]
+    },
+    sidestroke: {
+      name: "Sidestroke",
+      tags: ["safety", "open_water", "low_impact", "fitness"],
+      reasons: [
+        "Efficient and calm for long-distance swimming",
+        "Great in open water and for safety scenarios",
+        "Breathing is easy and controlled"
+      ],
+      drills: ["Side glide practice", "Scissor kick drill", "One-arm pull + glide"]
+    },
+    dog_paddle: {
+      name: "Dog Paddle",
+      tags: ["confidence", "safety"],
+      reasons: [
+        "Simple movement pattern for beginners",
+        "Helps you stay afloat while learning",
+        "Good stepping stone to real strokes"
+      ],
+      drills: ["Front float + gentle paddle", "Short 5–10m repeats", "Breathe-then-paddle rhythm"]
+    },
+    treading: {
+      name: "Treading Water",
+      tags: ["safety", "confidence", "open_water", "fitness"],
+      reasons: [
+        "Most important safety skill in deep water",
+        "Builds confidence and endurance",
+        "Useful for open water and rest breaks"
+      ],
+      drills: ["Eggbeater (or frog kick) practice", "Hands out of water challenge", "30s → 60s holds"]
+    },
+    sculling: {
+      name: "Sculling (feel for the water)",
+      tags: ["technique", "confidence", "low_impact"],
+      reasons: [
+        "Improves feel and control in the water",
+        "Boosts balance and stability fast",
+        "Great low-impact technique builder"
+      ],
+      drills: ["Front scull", "Mid scull", "Back scull"]
+    }
+  };
+
+  // Helper: create a blank score map
+  const initScores = () => Object.fromEntries(Object.keys(styles).map(k => [k, 0]));
+
+  // Helper: pick top styles (primary + optional secondary)
+  const pickTop = (scoreMap) => {
+    const sorted = Object.entries(scoreMap).sort((a, b) => b[1] - a[1]); // desc
+    const [topKey, topScore] = sorted[0];
+    const [secondKey, secondScore] = sorted[1] || [null, -999];
+
+    // If second is very close, show it as a "Backup option"
+    const showSecond = secondKey && (topScore - secondScore <= 2);
+
+    return {
+      primary: { key: topKey, score: topScore },
+      secondary: showSecond ? { key: secondKey, score: secondScore } : null
+    };
+  };
+
+  // Helper: session suggestion (no time input)
+  const makeSession = (primaryName, level, age) => {
+    // Keep it simple and safe
+    const baseByLevel = {
+      beginner: `Warm-up: 4×25m easy + Drill: 4×25m + Easy swim: 4×25m (${primaryName})`,
+      intermediate: `Warm-up: 200m easy + Drill: 6×25m + Main: 6×50m steady (${primaryName})`,
+      expert: `Warm-up: 300m easy + Drill: 8×25m + Main: 10×50m intervals (${primaryName})`
+    };
+
+    // Age-friendly tweaks
+    if (age === "kid") return baseByLevel[level].replace("intervals", "fun pace (good form)");
+    if (age === "senior") return `Warm-up: 200m easy + Drill: 6×25m + Main: 6×50m smooth (${primaryName})`;
+    return baseByLevel[level];
+  };
+
+  // Main scoring engine (variety without forcing)
+  const recommend = ({ level, goal, focus, age }) => {
+    const score = initScores();
+
+    // ---- Level bias ----
+    if (level === "beginner") {
+      score.elementary_backstroke += 4;
+      score.dog_paddle += 3;
+      score.backstroke += 3;
+      score.breaststroke += 2;
+      score.freestyle += 2;
+      score.butterfly -= 5;
+    }
+    if (level === "intermediate") {
+      score.freestyle += 4;
+      score.backstroke += 3;
+      score.breaststroke += 3;
+      score.sidestroke += 2;
+      score.sculling += 2;
+      score.butterfly += 1;
+    }
+    if (level === "expert") {
+      score.freestyle += 5;
+      score.butterfly += 5;
+      score.backstroke += 3;
+      score.breaststroke += 2;
+      score.sidestroke += 2;
+      score.treading += 2;
+      score.sculling += 2;
+    }
+
+    // ---- Goal bias ----
+    // We add points to styles whose tags match the goal
+    for (const [k, s] of Object.entries(styles)) {
+      if (s.tags.includes(goal)) score[k] += 4;
+    }
+
+    // Special goal nudges (make recommendations feel “smarter”)
+    if (goal === "safety") {
+      score.treading += 5;
+      score.sidestroke += 3;
+      score.elementary_backstroke += 3;
+    }
+    if (goal === "open_water") {
+      score.sidestroke += 4;
+      score.treading += 4;
+      score.freestyle += 2;
+      score.breaststroke += 2;
+    }
+    if (goal === "technique") {
+      score.sculling += 5;
+      score.backstroke += 3;
+      score.breaststroke += 2;
+    }
+    if (goal === "speed") {
+      score.freestyle += 4;
+      score.butterfly += 3;
+    }
+    if (goal === "confidence") {
+      score.elementary_backstroke += 4;
+      score.backstroke += 3;
+      score.dog_paddle += 2;
+    }
+
+    // ---- Preference bias ----
+    if (focus === "easy") {
+      score.elementary_backstroke += 3;
+      score.dog_paddle += 2;
+      score.backstroke += 2;
+      score.breaststroke += 2;
+      score.freestyle += 1;
+      score.butterfly -= 3;
+    }
+    if (focus === "balanced") {
+      score.freestyle += 2;
+      score.backstroke += 2;
+      score.breaststroke += 2;
+      score.sidestroke += 1;
+      score.sculling += 1;
+      score.treading += 1;
+    }
+    if (focus === "challenge") {
+      score.butterfly += 5;
+      score.freestyle += 3;
+      score.treading += 2;
+      score.sculling += 2;
+    }
+
+    // ---- Age bias ----
+    if (age === "kid") {
+      score.dog_paddle += 3;
+      score.elementary_backstroke += 3;
+      score.backstroke += 2;
+      score.treading += 2;
+      score.butterfly -= 2;
+    }
+    if (age === "teen") {
+      score.freestyle += 2;
+      score.backstroke += 1;
+      score.butterfly += 1;
+    }
+    if (age === "adult") {
+      score.freestyle += 2;
+      score.sidestroke += 1;
+      score.treading += 1;
+    }
+    if (age === "mature") {
+      score.backstroke += 2;
+      score.breaststroke += 2;
+      score.sidestroke += 2;
+      score.low_impact_bonus = 0; // no-op (just explicit)
+    }
+    if (age === "senior") {
+      score.backstroke += 4;
+      score.breaststroke += 3;
+      score.sidestroke += 3;
+      score.sculling += 2;
+      score.butterfly -= 3;
+    }
+
+    // Clamp negatives a bit (avoid weird results)
+    for (const k of Object.keys(score)) score[k] = Math.max(score[k], -2);
+
+    const picked = pickTop(score);
+    const primary = styles[picked.primary.key];
+    const secondary = picked.secondary ? styles[picked.secondary.key] : null;
+
+    // Tailored extra notes
+    const extraNotes = [];
+    if (goal === "safety") extraNotes.push("Safety tip: practice treading + floating every session.");
+    if (goal === "open_water") extraNotes.push("Open-water tip: sighting + calm breathing matters more than speed.");
+    if (level === "beginner") extraNotes.push("Keep it simple: comfort + breathing first, then distance.");
+    if (focus === "challenge") extraNotes.push("Push hard only when your form stays clean (quality > speed).");
+
+    return {
+      primary,
+      secondary,
+      session: makeSession(primary.name, level, age),
+      extraNotes
+    };
+  };
+
+  const render = (rec) => {
+    result.classList.add("show");
+
+    const primary = rec.primary;
+    const secondary = rec.secondary;
+
+    const secondaryHtml = secondary
+      ? `
+        <p style="margin-top:16px;"><strong>Backup option (also fits you):</strong> <span style="color: var(--accent-coral); font-weight: 700;">${secondary.name}</span></p>
+        <ul>${secondary.reasons.slice(0, 2).map(r => `<li>${r}</li>`).join("")}</ul>
+      `
+      : "";
+
+    const notesHtml = rec.extraNotes.length
+      ? `<p style="margin-top:14px;"><strong>Extra tips:</strong></p><ul>${rec.extraNotes.map(n => `<li>${n}</li>`).join("")}</ul>`
+      : "";
+
+    result.innerHTML = `
+      <h3>✅ Recommended Style: <span>${primary.name}</span></h3>
+
+      <p><strong>Why this fits you:</strong></p>
+      <ul>${primary.reasons.map(r => `<li>${r}</li>`).join("")}</ul>
+
+      <p style="margin-top:12px;"><strong>Try these drills:</strong></p>
+      <ul>${primary.drills.map(d => `<li>${d}</li>`).join("")}</ul>
+
+      <p style="margin-top:12px;"><strong>Starter session:</strong> ${rec.session}</p>
+
+      ${secondaryHtml}
+      ${notesHtml}
+    `;
+
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const level = document.getElementById("level").value;
+    const goal = document.getElementById("goal").value;
+    const focus = document.getElementById("focus").value;
+    const age = document.getElementById("age").value;
+
+    const rec = recommend({ level, goal, focus, age });
+    render(rec);
+  });
+
+  resetBtn.addEventListener("click", () => {
+    form.reset();
+    result.classList.remove("show");
+    result.innerHTML = "";
+  });
+});
+
+// ✅ FAQ Accordion
+document.addEventListener("DOMContentLoaded", () => {
+  const faqItems = document.querySelectorAll(".faq-item");
+
+  faqItems.forEach((item) => {
+    const btn = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
+    const icon = item.querySelector(".faq-icon");
+
+    btn.addEventListener("click", () => {
+      const isOpen = item.classList.contains("active");
+
+      // close all
+      faqItems.forEach((i) => {
+        i.classList.remove("active");
+        i.querySelector(".faq-question").setAttribute("aria-expanded", "false");
+        i.querySelector(".faq-answer").style.maxHeight = null;
+        i.querySelector(".faq-icon").textContent = "+";
+      });
+
+      // open selected
+      if (!isOpen) {
+        item.classList.add("active");
+        btn.setAttribute("aria-expanded", "true");
+        answer.style.maxHeight = answer.scrollHeight + "px";
+        icon.textContent = "–";
+      }
+    });
+  });
+});
+
+
+
 document.head.appendChild(style);
 
 console.log('🏊 SwimHub interactive features loaded successfully!');
