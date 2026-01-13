@@ -10,7 +10,28 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- ✅ n8n Chat CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css">
+
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
+<style>
+  :root {
+    /* Blue SwimHub theme */
+    --chat--color-primary: #0066CC;
+    --chat--color-primary-shade-50: #005bb8;
+    --chat--color-primary-shade-100: #004a99;
+    --chat--color-secondary: #00D4FF;
+    --chat--color-secondary-shade-50: #00bfe6;
+
+    --chat--color--primary: #0066CC;
+    --chat--color--primary-shade-50: #005bb8;
+    --chat--color--primary-shade-100: #004a99;
+    --chat--color--secondary: #00D4FF;
+    --chat--color--secondary-shade-50: #00bfe6;
+  }
+</style>
+
+
 </head>
 
 <body>
@@ -59,7 +80,7 @@
                     <h3>Breathing Techniques</h3>
                     <p>Master the art of controlled breathing. Inhale above water and exhale below for efficient
                         swimming.</p>
-                    <img src="images/breathing.webp" alt="Breathing techniques" loading="lazy">
+                    <img src="images/breathing.jpg" alt="Breathing techniques" loading="lazy">
                 </div>
                 <div class="basic-card">
                     <h3>Body Position</h3>
@@ -70,7 +91,7 @@
                 <div class="basic-card">
                     <h3>Floating</h3>
                     <p>Learn to float effortlessly. This is fundamental for survival and builds confidence in water.</p>
-                    <img src="images/floating.jpeg" alt="Floating" loading="lazy">
+                    <img src="images/floating.jpg" alt="Floating" loading="lazy">
                 </div>
             </div>
         </div>
@@ -194,11 +215,11 @@
             loadPreviousSession: false, // ✅ prevents workflow error when chat first opens
             initialMessages: [
                 '👋 Hi! I’m SwimBot.',
-                'Ask me anything about swimming!'
+                'Ask me anything about swimming! I got you 😉'
             ],
             i18n: {
                 en: {
-                    title: 'Hi There! 👋',
+                    title: 'Hi There! Welcome to Swimbot 👋',
                     subtitle: "Start a chat. We're here to help you 24/7.",
                     footer: '',
                     getStarted: 'New Conversation',

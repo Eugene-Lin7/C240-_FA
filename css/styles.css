@@ -380,6 +380,11 @@ button {
     color: var(--light-white);
 }
 
+.chatbot-section > .container > p {
+    color: #ffffff;
+}
+
+
 .chatbot-placeholder {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
